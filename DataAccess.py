@@ -28,7 +28,10 @@ class DataAccess(object):
 
         resultRows = searchResults.find_all('li', class_="result-row")
 
-        return resultRows
+        apartmentList = self.listUnits(resultRows) 
+
+        return apartmentList 
+
 
     def detailExtraction(self, html):
         # grabs price, footage, timePosted, apartmentLink
@@ -80,5 +83,4 @@ class DataAccess(object):
       return units
 
               
-
 
