@@ -30,41 +30,55 @@ class DataAccess(object):
 
         return resultRows
 
-    def detailExtraction(self,html):
-      # grabs price, footage, timePosted, apartmentLink
+    def detailExtraction(self, html):
+        # grabs price, footage, timePosted, apartmentLink
+      
+          apartment_price = html.find('span', class_="result-price").string
+      
+          footage = html.find('span', class_="housing")
+          #strip uneccessary /n
+          # footage = footage.strip()
+      
+          time_posted = html.find('time').attrs['datetime']
+      
+          apartment_link = html.find('a').attrs['href']
+          apartment_address = self.apartmentAddress(apartment_link)
+      
+          return [apartment_price, footage, apartment_address, time_posted, apartment_link ]
 
-       apartment_price = html.find('span', class_="result-price").string
-
-       footage = html.find('span', class_="housing").text
-       #strip uneccessary /n
-       footage = footage.strip()
-
-       time_posted = html.find('time').attrs['datetime']
-
-       apartment_link = html.find('a').attrs['href']
-       apartment_address = self.apartmentAddress(apartment_link)
-
-       return [apartment_price, footage, apartment_address, time_posted, apartment_link ]
 
 
-    def apartmentAddress(self,url):
-        
-        # Ulr for apartment listing`
-        url = url
 
+    def apartmentAddress(self, url):
+
+          
+          # Ulr for apartment listing`
+      url = url
+    
         #Headers
-        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+      user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+      headers={'User-Agent':user_agent,}
+    
+      request=urllib.request.Request(url,None,headers) #The assembled request
+      source = urllib.request.urlopen(request)
+      soup = bs4.BeautifulSoup(source, 'lxml')
+    
+      address = soup.find('div', class_='mapaddress')
+    
+      return address
+      
+    def listUnits(self,unitListings):
 
-        headers={'User-Agent':user_agent,} 
+      # functions takea a list and loops over iter
+      units = []
+      length = len(unitListings) -1
+      for i in range(length):
+      
+        item = unitListings[i]
+        data  = self.detailExtraction(item)
+        units.append(data)
+      return units
 
-        request=urllib.request.Request(url,None,headers) #The assembled request
-        source = urllib.request.urlopen(request)
-        soup = bs4.BeautifulSoup(source, 'lxml')
-
-        address = soup.find('div', class_='mapaddress').string
-
-        return address
-
-        
+              
 
 
