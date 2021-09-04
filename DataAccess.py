@@ -30,7 +30,9 @@ class DataAccess(object):
 
         apartmentList = self.listUnits(resultRows) 
 
-        return apartmentList 
+        footageCleanedList = [self.footageCleaner(i) for i in apartmentList]
+
+        return footageCleanedList
 
 
     def detailExtraction(self, html):
@@ -82,5 +84,15 @@ class DataAccess(object):
         units.append(data)
       return units
 
-              
 
+    def footageCleaner(self,listing):
+        if listing[1]:
+              footage_content = listing[1].contents
+              footageStr = ' '.join([str(elem) for elem in footage_content])
+              footageStr = footageStr.strip()
+              listing[1] = footageStr
+              return listing
+        else:
+            return listing
+                  
+      
