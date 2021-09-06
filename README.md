@@ -36,7 +36,7 @@ Run EasyStreet and download a csv of apartments within the area you want to move
 
 ```bash
 from EasyStreet import EasyStreet
-apartmentFinder = EasyStreet('Bushwick', 11237, 900, 1400)
+apartmentFinder = EasyStreet(1, 11237, 900, 1400)
 apartmentListings = bot.apartmentFinder()
 ```
 
