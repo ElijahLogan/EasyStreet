@@ -1,14 +1,15 @@
 import bs4
 import pprint
 import urllib.request
+import pandas as pd 
 
 class EasyStreet(object):
-    def __init__(self,neighborhood, zipcode, low, high ):
+    def __init__(self,search_distance, zipcode, low, high ):
         self.neighborhood = neighborhood
         self.zipcode = zipcode
         self.low = low
         self.high = high    
-        self.url = "https://newyork.craigslist.org/search/brk/hhh?query={}&search_distance=1&postal={}&min_price={}&max_price={}&availabilityMode=0&sale_date=all+dates".format(self.neighborhood, self.zipcode, self.low, self.high)
+        self.url = "https://newyork.craigslist.org/search/brk/apa?search_distance={}&postal={}&min_price={}&max_price={}&availabilityMode=0&housing_type=1&sale_date=all+dates".format(self.search_distance, self.zipcode, self.low, self.high)
 
     def apartmentSearch(self):
         
@@ -30,9 +31,26 @@ class EasyStreet(object):
 
         apartmentList = self.listUnits(resultRows) 
 
-         footageCleanedList = [self.footageCleaner(i) for i in apartmentList]
-
-        return footageCleanedList
+        footageCleanedList = [self.footageCleaner(i) for i in apartmentList]
+        
+        #putting clean data into Datafroame
+    
+        df = pd.DataFrame(footageCleanedList)
+        
+        cols = ['price', 'footage', 'address', 'timePosted', 'link']
+        
+        df.columns = cols
+        
+        #cleaning price column to be sorted
+        
+        apartmentListings['price'] = [str(i).replace("$", "") for i in apartmentListings['price']]
+        apartmentListings['price'] = [float(str(i).replace(",", "")) for i in apartmentListings['price']]
+        
+        #sorting the data
+        
+        priceSortedListings = apartmentListings.sort_values('price')
+        
+        return priceSortedListings
 
 
     def detailExtraction(self, html):
