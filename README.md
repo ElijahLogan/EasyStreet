@@ -4,7 +4,7 @@
     
 # Easy Street
 
-Easy Street allows people to programmatically find apartments in Brooklyn via scraping and compiling apartments listings from Craigslist that match their search criteria without having to dig through listings manually.Find what you need and be on EasyStreet. 
+Easy Street allows people to programmatically find apartments in Brooklyn via scraping and compiling apartments listings from Craigslist that match their search criteria. No digging through listings manually.Find what you need and be on EasyStreet. 
 ## Run Locally
 
 Clone the project
